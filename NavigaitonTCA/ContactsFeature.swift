@@ -43,18 +43,18 @@ struct ContactsFeature {
                 state.addContact = nil
                 return .none
 
-                case .addContact:
+            case .addContact:
                 return .none
             }
         }
         .ifLet(\.$addContact, action: \.addContact) {
-          AddContactFeature()
+            AddContactFeature()
         }
     }
 }
 
 struct ContactsView: View {
-    let store: StoreOf<ContactsFeature>
+    @Bindable var store: StoreOf<ContactsFeature>
 
     var body: some View {
         NavigationStack {
@@ -72,6 +72,12 @@ struct ContactsView: View {
                         Image(systemName: "plus")
                     }
                 }
+            }
+        }
+        .sheet(item: $store.scope(state: \.addContact, action: \.addContact)
+        ) { addContactStore in
+            NavigationStack {
+                AddContactView(store: addContactStore)
             }
         }
     }
